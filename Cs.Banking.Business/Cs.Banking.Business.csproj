@@ -51,6 +51,12 @@
     <Compile Include="CTransactions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cs.Banking.Data\Cs.Banking.Data.csproj">
+      <Project>{89027934-EFF8-4784-95B8-2A7341BC4715}</Project>
+      <Name>Cs.Banking.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
