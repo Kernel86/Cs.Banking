@@ -2,7 +2,7 @@
  * [dlgAbout.xaml.cs]
  * C# Intermediate
  * Shawn Novak
- * 2012-11-08
+ * 2012-11-29
  *************************/
 
 using System;
@@ -30,8 +30,8 @@ namespace Cs.Banking.UI
             InitializeComponent();
 
             // Set assignment information
-            lblAssignment.Text = "C# Intermediate - Project 4 - Banking";
-            lblDate.Text = "2012-11-08";
+            lblAssignment.Text = "C# Intermediate - Project 5 - Banking #2";
+            lblDate.Text = "2012-11-29";
         }
 
         private void btnOK_Click(object sender, RoutedEventArgs e)

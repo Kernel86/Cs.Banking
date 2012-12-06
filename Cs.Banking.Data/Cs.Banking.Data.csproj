@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="CFile.cs" />
     <Compile Include="CStatic.cs" />
+    <Compile Include="CXml.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

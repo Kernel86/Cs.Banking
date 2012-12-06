@@ -2,13 +2,13 @@
  * [CCustomers.cs]
  * C# Intermediate
  * Shawn Novak
- * 2012-11-08
+ * 2012-11-29
  *************************/
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 
 using Cs.Banking.Data;
 
@@ -32,6 +32,9 @@ namespace Cs.Banking.Business
             _glItems = new List<CCustomer>();
         }
 
+    // Events
+        public event EventHandler CustomersChanged;
+
     // Public Methods
         public int Count()
         {
@@ -41,11 +44,13 @@ namespace Cs.Banking.Business
         public void Add(CCustomer oItem)
         {
             _glItems.Add(oItem);
+            CustomersChanged(this, new EventArgs());
         }
 
         public void RemoveAt(int iIndex)
         {
             _glItems.RemoveAt(iIndex);
+            CustomersChanged(this, new EventArgs());
         }
 
         // Populate the object
@@ -57,6 +62,36 @@ namespace Cs.Banking.Business
                 CStatic oStatic = new CStatic();
                 ParseCustomers(oStatic.StaticCustomers());
                 oStatic = null;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void Save()
+        {
+            try
+            {
+                CXml oXml = new CXml(Properties.Settings.Default.Filename);
+                oXml.Serialize(Items, typeof(List<CCustomer>));
+
+                oXml = null;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void Load()
+        {
+            try
+            {
+                CXml oXml = new CXml(Properties.Settings.Default.Filename);
+                Items = (List<CCustomer>)oXml.Deserialize(typeof(List<CCustomer>));
+
+                oXml = null;
             }
             catch (Exception ex)
             {
