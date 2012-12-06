@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -53,7 +54,7 @@ namespace Cs.Banking.Business
             CustomersChanged(this, new EventArgs());
         }
 
-        // Populate the object
+        // Populate the object with Static data
         public void Populate()
         {
             try
@@ -69,6 +70,7 @@ namespace Cs.Banking.Business
             }
         }
 
+        // Save the object to an XML file
         public void Save()
         {
             try
@@ -84,6 +86,30 @@ namespace Cs.Banking.Business
             }
         }
 
+        public int GetData()
+        {
+            try
+            {
+                this.Items = new List<CCustomer>();
+                CSQLServer oSQL = new CSQLServer();
+                int iCount = 0;
+
+                DataTable odtCustomers = oSQL.GetData("SELECT * FROM A6.tblCustomers;");
+                foreach (DataRow oDR in odtCustomers.Rows)
+                {
+                    this.Add(new CCustomer(oDR));
+                    iCount++;
+                }
+
+                return iCount;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        // Load the object from an XML file
         public void Load()
         {
             try

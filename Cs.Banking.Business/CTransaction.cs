@@ -2,12 +2,12 @@
  * [CTransaction.cs]
  * C# Intermediate
  * Shawn Novak
- * 2012-11-08
+ * 2012-12-06
  *************************/
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Data;
 using System.Text;
 
 namespace Cs.Banking.Business
@@ -54,6 +54,13 @@ namespace Cs.Banking.Business
             _iTransactionId = transactionId;
             _dAmount = amount;
             _dtDate = date;
+        }
+
+        public CTransaction(DataRow oDR)
+        {
+            _iTransactionId = (int)oDR["transaction_id"];
+            _dAmount = (double)oDR["transaction_amount"];
+            _dtDate = DateTime.Parse((string)oDR["transaction_date"]);
         }
         #endregion
     }

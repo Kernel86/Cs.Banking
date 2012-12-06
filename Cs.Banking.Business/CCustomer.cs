@@ -2,11 +2,12 @@
  * [CCustomer.cs]
  * C# Intermediate
  * Shawn Novak
- * 2012-11-08
+ * 2012-12-06
  *************************/
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -126,6 +127,16 @@ namespace Cs.Banking.Business
             LastName = lastname;
             BirthDate = birthdate;
             _iCustomerId = customerid;
+            _oTransactionList = new CTransactions();
+        }
+
+        public CCustomer(DataRow oDR)
+        {
+            _iCustomerId = (int)oDR["customer_id"];
+            SSN = (string)oDR["ssn"];
+            FirstName = (string)oDR["first_name"];
+            LastName = (string)oDR["last_name"];
+            BirthDate = DateTime.Parse((string)oDR["birth_date"]);
             _oTransactionList = new CTransactions();
         }
         #endregion
