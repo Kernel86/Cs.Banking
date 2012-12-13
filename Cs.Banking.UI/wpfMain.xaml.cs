@@ -145,9 +145,21 @@ namespace Cs.Banking.UI
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            oCustomers.Items[lstCustomers.SelectedIndex].Delete();
-            oCustomers.RemoveAt(lstCustomers.SelectedIndex);
-            btnClear_Click(sender, e);
+            try
+            {
+                MessageBoxResult oResult = MessageBox.Show("Are you sure you want to delete this record?", "Delete Warning", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+
+                if (oResult == MessageBoxResult.Yes)
+                {
+                    oCustomers.Items[lstCustomers.SelectedIndex].Delete();
+                    oCustomers.RemoveAt(lstCustomers.SelectedIndex);
+                    btnClear_Click(sender, e);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void oCustomers_CustomersChanged(object sender, EventArgs e)
