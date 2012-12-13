@@ -136,8 +136,9 @@ namespace Cs.Banking.Business
             SSN = (string)oDR["ssn"];
             FirstName = (string)oDR["first_name"];
             LastName = (string)oDR["last_name"];
-            BirthDate = DateTime.Parse((string)oDR["birth_date"]);
+            BirthDate = (DateTime)oDR["birth_date"];
             _oTransactionList = new CTransactions();
+            _oTransactionList.GetData(_iCustomerId);
         }
         #endregion
 
@@ -162,6 +163,57 @@ namespace Cs.Banking.Business
                     lstWithdrawals.Add(oTransaction);
 
             return lstWithdrawals;
+        }
+
+        public int Insert()
+        {
+            try
+            {
+                CSQLServer oCD = new CSQLServer();
+
+                int iRows = oCD.Insert("INSERT INTO \"A6.tblCustomers\" VALUES('" + FirstName + "', '" + LastName + "', '" + BirthDate.ToString() + "', '" + SSN + "')");
+
+                oCD = null;
+                return iRows;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public int Update()
+        {
+            try
+            {
+                CSQLServer oCD = new CSQLServer();
+
+                int iRows = oCD.Update("UPDATE \"A6.tblCustomers\" SET first_name = '" + FirstName + "', last_name = '" + LastName + "', birth_date = '" + BirthDate.ToString() + "', ssn = '" + SSN + "' WHERE customer_id = " + CustomerId);
+
+                oCD = null;
+                return iRows;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public int Delete()
+        {
+            try
+            {
+                CSQLServer oCD = new CSQLServer();
+
+                int iRows = oCD.Delete("DELETE FROM \"A6.tblCustomers\"  WHERE customer_id = " + CustomerId);
+
+                oCD = null;
+                return iRows;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

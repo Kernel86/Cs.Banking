@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
+using Cs.Banking.Data;
+
 namespace Cs.Banking.Business
 {
     public class CTransaction
@@ -59,9 +61,27 @@ namespace Cs.Banking.Business
         public CTransaction(DataRow oDR)
         {
             _iTransactionId = (int)oDR["transaction_id"];
-            _dAmount = (double)oDR["transaction_amount"];
-            _dtDate = DateTime.Parse((string)oDR["transaction_date"]);
+            _dAmount = Double.Parse(((decimal)oDR["transaction_amount"]).ToString());
+            _dtDate = (DateTime)oDR["transaction_date"];
         }
         #endregion
+
+    // Public Methods
+        public int Insert(int iCustomerID)
+        {
+            try
+            {
+                CSQLServer oCD = new CSQLServer();
+
+                int iRows = oCD.Insert("INSERT INTO \"A6.tblTransactions\" (customer_id, transaction_amount, transaction_date) VALUES(" + iCustomerID + ", " + Amount + ", '" + Date.ToString() + "')");
+
+                oCD = null;
+                return iRows;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

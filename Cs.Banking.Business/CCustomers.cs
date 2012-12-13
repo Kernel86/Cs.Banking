@@ -27,6 +27,11 @@ namespace Cs.Banking.Business
             set { _glItems = value; }
         }
 
+        public int Count
+        {
+            get { return _glItems.Count; }
+        }
+
     // Public Constructors
         public CCustomers()
         {
@@ -37,21 +42,20 @@ namespace Cs.Banking.Business
         public event EventHandler CustomersChanged;
 
     // Public Methods
-        public int Count()
-        {
-            return _glItems.Count;
-        }
-
         public void Add(CCustomer oItem)
         {
             _glItems.Add(oItem);
-            CustomersChanged(this, new EventArgs());
+
+            if (CustomersChanged != null)
+                 CustomersChanged(this, new EventArgs());
         }
 
         public void RemoveAt(int iIndex)
         {
             _glItems.RemoveAt(iIndex);
-            CustomersChanged(this, new EventArgs());
+
+            if (CustomersChanged != null)
+                CustomersChanged(this, new EventArgs());
         }
 
         // Populate the object with Static data
@@ -86,26 +90,36 @@ namespace Cs.Banking.Business
             }
         }
 
+        // Load the object from a database
         public int GetData()
         {
             try
             {
-                this.Items = new List<CCustomer>();
+                Items = new List<CCustomer>();
                 CSQLServer oSQL = new CSQLServer();
-                int iCount = 0;
 
-                DataTable odtCustomers = oSQL.GetData("SELECT * FROM A6.tblCustomers;");
+                DataTable odtCustomers = oSQL.GetData("SELECT * FROM \"A6.tblCustomers\";");
                 foreach (DataRow oDR in odtCustomers.Rows)
                 {
-                    this.Add(new CCustomer(oDR));
-                    iCount++;
+                    CCustomer oCustomer = new CCustomer(oDR);
+                    this.Add(oCustomer);
                 }
 
-                return iCount;
+                return odtCustomers.Rows.Count;
             }
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        // Insert all data into a database
+        public void CommitFlat()
+        {
+            foreach (CCustomer oCustomer in Items)
+            {
+                oCustomer.Insert();
+                oCustomer.TransactionList.CommitFlat(oCustomer.Id);
             }
         }
 

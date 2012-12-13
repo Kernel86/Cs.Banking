@@ -74,6 +74,17 @@ namespace Cs.Banking.Data
         }
 
     // Public Methods
+        public bool PingConnection()
+        {
+            if (Open() == ConnectionState.Open)
+            {
+                Close();
+                return true;
+            }
+            else
+                return false;
+        }
+
         public DataTable GetData(string sCommand)
         {
             try

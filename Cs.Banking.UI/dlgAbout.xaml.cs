@@ -30,8 +30,8 @@ namespace Cs.Banking.UI
             InitializeComponent();
 
             // Set assignment information
-            lblAssignment.Text = "C# Intermediate - Project 5 - Banking #2";
-            lblDate.Text = "2012-11-29";
+            lblAssignment.Text = "C# Intermediate - Project 6 - Banking #3";
+            lblDate.Text = "2012-12-13";
         }
 
         private void btnOK_Click(object sender, RoutedEventArgs e)

@@ -41,8 +41,10 @@ namespace Cs.Banking.UI
             try
             {
                 oCustomers = new CCustomers();
-                //oCustomers.Populate();
-                oCustomers.Load();
+                //oCustomers.Populate(); // CStatic
+                //oCustomers.Load(); // CXml
+                //oCustomers.CommitFlat();
+                oCustomers.GetData(); // CSQLServer
                 oCustomers.CustomersChanged += new EventHandler(oCustomers_CustomersChanged);
 
                 lstCustomers.ItemsSource = oCustomers.Items;
@@ -57,7 +59,7 @@ namespace Cs.Banking.UI
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            oCustomers.Save();
+            //oCustomers.Save();
 
             oCustomers = null;
         }
@@ -86,7 +88,7 @@ namespace Cs.Banking.UI
                 txtFirstName.Text = oCustomers.Items[lstCustomers.SelectedIndex].FirstName;
                 txtLastName.Text = oCustomers.Items[lstCustomers.SelectedIndex].LastName;
                 txtSSN.Text = oCustomers.Items[lstCustomers.SelectedIndex].SSN;
-                txtId.Text = oCustomers.Items[lstCustomers.SelectedIndex].Id.ToString();
+                txtId.Text = oCustomers.Items[lstCustomers.SelectedIndex].CustomerId.ToString();
                 txtBirthDate.Text = oCustomers.Items[lstCustomers.SelectedIndex].BirthDate.ToShortDateString();
 
                 dgDeposits.ItemsSource = oCustomers.Items[lstCustomers.SelectedIndex].DepositList;
@@ -107,32 +109,43 @@ namespace Cs.Banking.UI
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
-            DateTime dtBirthdate;
-
-            if (txtFirstName.Text.Length > 0 &&
-                txtLastName.Text.Length > 0 &&
-                DateTime.TryParse(txtBirthDate.Text, out dtBirthdate) &&
-                txtSSN.Text.Length > 0)
+            try
             {
-                if (btnAdd.Content.ToString() == "Add")
-                {
-                    CCustomer oNewCustomer = new CCustomer(lstCustomers.Items.Count + 1, txtSSN.Text, txtFirstName.Text, txtLastName.Text, dtBirthdate, lstCustomers.Items.Count + 1);
-                    oCustomers.Add(oNewCustomer);
-                }
-                else
-                {
-                    oCustomers.Items[lstCustomers.SelectedIndex].FirstName = txtFirstName.Text;
-                    oCustomers.Items[lstCustomers.SelectedIndex].LastName = txtLastName.Text;
-                    oCustomers.Items[lstCustomers.SelectedIndex].SSN = txtSSN.Text;
-                    oCustomers.Items[lstCustomers.SelectedIndex].BirthDate = dtBirthdate;
+                DateTime dtBirthdate;
 
-                    oCustomers_CustomersChanged(sender, e);
+                if (txtFirstName.Text.Length > 0 &&
+                    txtLastName.Text.Length > 0 &&
+                    DateTime.TryParse(txtBirthDate.Text, out dtBirthdate) &&
+                    txtSSN.Text.Length > 0)
+                {
+                    if (btnAdd.Content.ToString() == "Add")
+                    {
+                        CCustomer oNewCustomer = new CCustomer(lstCustomers.Items.Count + 1, txtSSN.Text, txtFirstName.Text, txtLastName.Text, dtBirthdate, lstCustomers.Items.Count + 1);
+                        oNewCustomer.Insert();
+                        oCustomers.Add(oNewCustomer);
+                    }
+                    else
+                    {
+                        oCustomers.Items[lstCustomers.SelectedIndex].FirstName = txtFirstName.Text;
+                        oCustomers.Items[lstCustomers.SelectedIndex].LastName = txtLastName.Text;
+                        oCustomers.Items[lstCustomers.SelectedIndex].SSN = txtSSN.Text;
+                        oCustomers.Items[lstCustomers.SelectedIndex].BirthDate = dtBirthdate;
+
+                        oCustomers.Items[lstCustomers.SelectedIndex].Update();
+
+                        oCustomers_CustomersChanged(sender, e);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
+            oCustomers.Items[lstCustomers.SelectedIndex].Delete();
             oCustomers.RemoveAt(lstCustomers.SelectedIndex);
             btnClear_Click(sender, e);
         }

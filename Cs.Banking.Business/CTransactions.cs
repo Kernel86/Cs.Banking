@@ -22,7 +22,7 @@ namespace Cs.Banking.Business
     // Public Properties
         public int Count
         {
-            get { return _glItems.Count; };
+            get { return _glItems.Count; }
         }
 
         public List<CTransaction> Items
@@ -55,7 +55,7 @@ namespace Cs.Banking.Business
                 this.Items = new List<CTransaction>();
                 CSQLServer oSQL = new CSQLServer();
 
-                DataTable odtCustomers = oSQL.GetData("SELECT * FROM A6.tblTransactions WHERE customer_id = " + iCustomerId + ";");
+                DataTable odtCustomers = oSQL.GetData("SELECT * FROM \"A6.tblTransactions\" WHERE customer_id = " + iCustomerId + ";");
                 foreach (DataRow oDR in odtCustomers.Rows)
                 {
                     this.Add(new CTransaction(oDR));
@@ -64,6 +64,14 @@ namespace Cs.Banking.Business
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        public void CommitFlat(int iCustomerID)
+        {
+            foreach (CTransaction oTransaction in Items)
+            {
+                oTransaction.Insert(iCustomerID);
             }
         }
     }
